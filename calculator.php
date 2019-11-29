@@ -7,14 +7,19 @@ class Calculator {
     
     private $exeptionMessages = array(
         'division' => 'divizion by zero',
-        'invalid_arg' => 'Arg must be a number'
+        'invalid_arg' => 'Arg must be a number',
+        'undefMethof' => 'Undefined Method'
     );
     
     public function __construct() {}
     
     public function operation($funcion, $var){
         if(!is_numeric($var)){
-            return $this->exeption();
+            return $this->exeption('invalid_arg');
+        }
+        
+        if(!method_exists($this, $funcion)){
+            return $this->exeption('undefMethof');
         }
         
         return $this->$funcion($var);
@@ -29,6 +34,10 @@ class Calculator {
     }
     
     protected function divide($var = 0){
+        if(empty($var)){
+            return $this->exeption('division');
+        }
+        
         return $this->result /= $var;
     }
     
@@ -41,7 +50,7 @@ class Calculator {
     }
     
     protected function exeption($name){
-        throw new Exception($this->$exeptionMessages[$name]);
+        throw new Exception($this->exeptionMessages[$name]);
     }
     
 }
